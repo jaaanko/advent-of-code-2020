@@ -36,8 +36,7 @@ def part1(maskToInstructions):
             )
 
     for value in mem.values():
-        if value:
-            res += value
+        res += value
 
     return res
 
@@ -76,8 +75,7 @@ def part2(maskToInstructions):
                 mem[binaryToDecimal([int(c) for c in binaryAddressCopy])] = value
 
     for value in mem.values():
-        if value:
-            res += value
+        res += value
 
     return res
 
