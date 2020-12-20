@@ -4,16 +4,12 @@ def isValid(rulesToBeChecked,rulesDict,message):
     if not rulesToBeChecked:
         return not message
 
-    currRuleNum,rulesToBeChecked = rulesToBeChecked[0], rulesToBeChecked[1:]
+    currRuleNum = rulesToBeChecked[0]
     
     if isinstance(rulesDict[currRuleNum],str):
-        return message.startswith(rulesDict[currRuleNum]) and isValid(rulesToBeChecked,rulesDict,message[1:])
+        return message.startswith(rulesDict[currRuleNum]) and isValid(rulesToBeChecked[1:],rulesDict,message[1:])
     
-    for ruleNums in rulesDict[currRuleNum]:
-        if isValid([ruleNum for ruleNum in ruleNums] + rulesToBeChecked,rulesDict,message):
-            return True
-
-    return False
+    return any(isValid(ruleNums + rulesToBeChecked[1:],rulesDict,message) for ruleNums in rulesDict[currRuleNum])
 
 def part1(rulesDict,messages):
     return sum(isValid([0],rulesDict,message) for message in messages)
@@ -21,6 +17,7 @@ def part1(rulesDict,messages):
 with open('input-01.txt') as f:
     rules, messages = f.read().split('\n\n')
     rulesDict = defaultdict(list)
+    messages = messages.split('\n')
 
     for rule in rules.split('\n'):
         ruleNum, subRuleNums = rule.split(': ')
@@ -31,7 +28,7 @@ with open('input-01.txt') as f:
             else:
                 rulesDict[ruleNum].append([int(c) for c in subRuleNum.split(' ')])
 
-    print(part1(rulesDict,messages.split('\n')))
+    print(part1(rulesDict,messages))
     rulesDict[8].append([42,8])
     rulesDict[11].append([42,11,31])
-    print(part1(rulesDict,messages.split('\n')))
+    print(part1(rulesDict,messages))
