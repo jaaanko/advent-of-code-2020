@@ -80,12 +80,13 @@ def countAdjacentBlackTiles(tiles,x,y):
 def part2(tiles,days):
     for _ in range(days):
         grow(tiles)
-        new = tiles.copy()
+        new = {}
 
-        for x,y in list(tiles):
+        for coords,color in tiles.items():
+            x,y = coords
             adjacentBlackTiles = countAdjacentBlackTiles(tiles,x,y)
-
-            if (tiles[(x,y)] and (not adjacentBlackTiles or adjacentBlackTiles > 2)) or (not tiles[(x,y)] and adjacentBlackTiles == 2):
+            new[(x,y)] = color
+            if (color and (not adjacentBlackTiles or adjacentBlackTiles > 2)) or (not color and adjacentBlackTiles == 2):
                 flip(new,x,y)
         
         tiles = new
@@ -93,10 +94,5 @@ def part2(tiles,days):
     return tiles
 
 with open('input-01.txt') as f:
-    directions = []
-
-    for tile in f.readlines():
-        directions.append(tile)
-
-    tiles = part1(directions)
+    tiles = part1([tile for tile in f.readlines()])
     print(sum(tiles.values()),sum(part2(tiles,100).values()))
